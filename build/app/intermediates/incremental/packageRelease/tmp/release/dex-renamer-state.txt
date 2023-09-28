@@ -1,0 +1,4 @@
+#Thu Sep 28 20:12:11 BDT 2023
+base.0=/home/akib/DEKACORE/Documents/Coding_Section/Flutter/weather_app/build/app/intermediates/dex/release/minifyReleaseWithR8/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

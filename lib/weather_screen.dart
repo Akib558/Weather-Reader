@@ -13,7 +13,7 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
-  late Future<Map<String,dynamic>> weather;
+  late Future<Map<String, dynamic>> weather;
   Future<Map<String, dynamic>> getCurrentWeather() async {
     try {
       // String cityName = 'Dhaka';
@@ -29,9 +29,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
       // print(data['list'][0]['main']['temp']);
 
-
       // temp = data['list'][0]['main']['temp'] - 273;
-
     } catch (e) {
       throw e.toString();
     }
@@ -49,7 +47,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Weather App",
+          "Weather Reader",
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -57,21 +55,25 @@ class _WeatherScreenState extends State<WeatherScreen> {
         centerTitle: true,
         actions: [
           //Inkwell can be used
-          IconButton(onPressed: () {
-            setState(() {
-              
-            });
-          }, icon: const Icon(Icons.refresh)),
+          IconButton(
+              onPressed: () {
+                setState(() {});
+              },
+              icon: const Icon(Icons.refresh)),
         ],
       ),
       body: FutureBuilder(
         // future: getCurrentWeather(),
         future: weather,
         builder: (context, snapshot) {
-          print(snapshot);
-          print(snapshot.runtimeType);
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return const Center(child: CircularProgressIndicator(color: Colors.white, strokeWidth: 10, ));
+          // print(snapshot);
+          // print(snapshot.runtimeType);
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Colors.white,
+              strokeWidth: 10,
+            ));
           }
 
           final data = snapshot.data!;
@@ -82,150 +84,152 @@ class _WeatherScreenState extends State<WeatherScreen> {
           final currentPressure = data['list'][0]['main']['pressure'];
           // currecntTemperature = currecntTemperature
 
-
-
           return Padding(
-                padding: EdgeInsets.all(15),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // main card
-                      SizedBox(
-                        width: double.infinity,
-                        child: Card(
-                          elevation: 10,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "${currecntTemperature.toStringAsFixed(2)} °C",
-                                      style: TextStyle(
-                                        fontSize: 32,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Icon(
-                                      currentWeather == 'Rain' ? Icons.cloud : Icons.sunny,
-                                      size: 70,
-                                    ),
-                                    Text(
-                                      "${currentWeather }",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    )
-                                  ],
+            padding: EdgeInsets.all(15),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // main card
+                  SizedBox(
+                    width: double.infinity,
+                    child: Card(
+                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                Text(
+                                  "${currecntTemperature.toStringAsFixed(2)} °C",
+                                  style: TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
+                                Icon(
+                                  currentWeather == 'Rain'
+                                      ? Icons.water
+                                      : currentWeather == 'Clouds'
+                                          ? Icons.cloud
+                                          : Icons.sunny,
+                                  size: 70,
+                                ),
+                                Text(
+                                  "${currentWeather}",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ),
                       ),
-                              
-                      SizedBox(
-                        height: 20,
-                      ),
-                              
-                      Text(
-                        "Weather Forecast: ",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                              
-                      // SingleChildScrollView(
-                      //   scrollDirection: Axis.horizontal,
-                      //   child: Row(
-                      //     children: [
-                      //       for(int i = 1; i <= 30; i++)
-                      //         HourlyForecastItem(
-                      //           icon: data['list'][0]['weather'][0]['main'] == 'Rain' ? Icons.cloud : Icons.sunny, 
-                      //           time: data['list'][0]['dt'].toString(), 
-                      //           temp: (data['list'][0]['main']['temp']-273).toStringAsFixed(2)+' °C'),
-                      //     ],
-                      //   ),
-                      // ),
-                    
-                    SizedBox(
-                      height: 140,
-                      child: ListView.builder(
-                        itemCount: 6,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          final timee = DateTime.parse(data['list'][index+1]['dt_txt']);
-                
-                          return HourlyForecastItem(
-                                  icon:  data['list'][index+1]['weather'][0]['main'] == 'Rain' ? Icons.cloud : Icons.sunny, 
-                                  time:  DateFormat.jm().format(timee).toString(), 
-                                  // time: data['list'][index+1]['dt_txt'].toString(),
-                                  temp: (data['list'][index+1]['main']['temp']-273).toStringAsFixed(2)+' °C')
-                          ;
-                        },
-                        ),
                     ),
-                    
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                      SizedBox(
-                        height: 20,
-                      ),
-                              
-                      Text(
-                        "Additional Information: ",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                              
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          AdditionalInformation(
-                              icon: Icons.water_drop,
-                              top: "Humidity",
-                              bottom: "${currentHumidity}"),
-                          AdditionalInformation(
-                              icon: Icons.air, 
-                              top: "Wind Speed", 
-                              bottom: "${currentWindSpeed}"),
-                          AdditionalInformation(
-                              icon: Icons.umbrella,
-                              top: "Pressure",
-                              bottom: "${currentPressure}"),
-                        ],
-                      ),
+                  ),
+
+                  SizedBox(
+                    height: 20,
+                  ),
+
+                  Text(
+                    "Weather Forecast: ",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+
+                  // SingleChildScrollView(
+                  //   scrollDirection: Axis.horizontal,
+                  //   child: Row(
+                  //     children: [
+                  //       for(int i = 1; i <= 30; i++)
+                  //         HourlyForecastItem(
+                  //           icon: data['list'][0]['weather'][0]['main'] == 'Rain' ? Icons.cloud : Icons.sunny,
+                  //           time: data['list'][0]['dt'].toString(),
+                  //           temp: (data['list'][0]['main']['temp']-273).toStringAsFixed(2)+' °C'),
+                  //     ],
+                  //   ),
+                  // ),
+
+                  SizedBox(
+                    height: 140,
+                    child: ListView.builder(
+                      itemCount: 6,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        final timee =
+                            DateTime.parse(data['list'][index + 1]['dt_txt']);
+
+                        return HourlyForecastItem(
+                            icon: data['list'][index + 1]['weather'][0]
+                                        ['main'] ==
+                                    'Rain'
+                                ? Icons.water
+                                : data['list'][index + 1]['weather'][0]
+                                            ['main'] ==
+                                        'Clouds'
+                                    ? Icons.cloud
+                                    : Icons.sunny,
+                            time: DateFormat.jm().format(timee).toString(),
+                            // time: data['list'][index+1]['dt_txt'].toString(),
+                            temp:
+                                (data['list'][index + 1]['main']['temp'] - 273)
+                                        .toStringAsFixed(2) +
+                                    ' °C');
+                      },
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: 20,
+                  ),
+
+                  Text(
+                    "Additional Information: ",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      AdditionalInformation(
+                          icon: Icons.water_drop,
+                          top: "Humidity",
+                          bottom: "${currentHumidity}"),
+                      AdditionalInformation(
+                          icon: Icons.air,
+                          top: "Wind Speed",
+                          bottom: "${currentWindSpeed}"),
+                      AdditionalInformation(
+                          icon: Icons.umbrella,
+                          top: "Pressure",
+                          bottom: "${currentPressure}"),
                     ],
                   ),
-                ),
-              );
+                ],
+              ),
+            ),
+          );
         },
       ),
     );
